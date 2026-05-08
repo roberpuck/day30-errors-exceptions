@@ -67,6 +67,17 @@ def verify_emptyfields(website,mail,password):
             return False
         else:
             return True
+def search_website():
+    website = url.get()
+    print('Searching... website')
+    with open("./data.json",'r') as file:
+        data = json.load(file)
+        if website in data:
+            username=data[website]['email']
+            password = data[website]['password']
+            messagebox.showinfo(title=website,message=f"{username}\n{password}")
+        else:
+            print(f"Website {website} does not exist")
 
 
 # ---------------------------- UI SETUP ------------------------------- #
@@ -106,8 +117,10 @@ pwd_entry.grid(column=1,row=3,sticky='w')
 #Buttons
 generate_button = Button(text='Generate Password',font=('calibre',10),command=generate_password)
 add_button = Button(text='Add',font=('calibre',10),command=add_password,width=31,justify='left')
+search_button = Button(text='Search',font=('calibre',10),command=search_website)
 generate_button.grid(column=2,row=3,sticky='w')
 add_button.grid(column=1,row=4,columnspan=2,sticky='w')
+search_button.grid(column=2,row=1,sticky='e')
 pwd_window.mainloop()
 
 
