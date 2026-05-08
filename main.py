@@ -44,7 +44,6 @@ def add_password():
             with open("./data.json",'r') as file:
                 file_l = json.load(file)
         except FileNotFoundError:
-            print("File created")
             with open("./data.json", "w") as data_json:
                 json.dump(new_data, data_json, indent=4)
         else:
@@ -67,17 +66,22 @@ def verify_emptyfields(website,mail,password):
             return False
         else:
             return True
+    return None
+
 def search_website():
     website = url.get()
-    print('Searching... website')
-    with open("./data.json",'r') as file:
-        data = json.load(file)
+    try:
+        with open("./data.json",'r') as file:
+            data = json.load(file)
+    except FileNotFoundError:
+        messagebox.showwarning(title='Error',message="The file does not exist")
+    else:
         if website in data:
             username=data[website]['email']
             password = data[website]['password']
             messagebox.showinfo(title=website,message=f"{username}\n{password}")
         else:
-            print(f"Website {website} does not exist")
+            messagebox.showinfo(title='Info',message="No records found")
 
 
 # ---------------------------- UI SETUP ------------------------------- #
@@ -107,7 +111,7 @@ pwd = StringVar()
 email = StringVar()
 website_entry = Entry(pwd_window,textvariable=url,font=('calibre',10),width=36,justify='left')
 email_entry = Entry(pwd_window,textvariable=email,font=('calibre',10),justify='left', width=36)
-pwd_entry = Entry(pwd_window,textvariable=pwd,font=('calibre',10),width=25)
+pwd_entry = Entry(pwd_window,textvariable=pwd,font=('calibre',10),width=36)
 website_entry.grid(column=1,columnspan=2,row=1,sticky='w')
 website_entry.focus()
 email_entry.grid(column=1,columnspan=2,row=2,sticky='w')
@@ -120,7 +124,7 @@ add_button = Button(text='Add',font=('calibre',10),command=add_password,width=31
 search_button = Button(text='Search',font=('calibre',10),command=search_website)
 generate_button.grid(column=2,row=3,sticky='w')
 add_button.grid(column=1,row=4,columnspan=2,sticky='w')
-search_button.grid(column=2,row=1,sticky='e')
+search_button.grid(column=2,row=1,sticky='w')
 pwd_window.mainloop()
 
 
